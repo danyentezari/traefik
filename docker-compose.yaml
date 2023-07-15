@@ -1,0 +1,86 @@
+# version: '3.8'
+
+# services:
+#   nginx:
+#     image: nginx:latest
+#     ports:
+#       - 8887:8887
+#     volumes:
+#       - ./nginx.conf:/etc/nginx/nginx.conf
+
+#   backend1:
+#     image: code_docker_jupyter_image
+
+
+
+# version: '3'
+# services:
+#   traefik:
+#     image: traefik:v2.10
+#     command:
+#       - "--api.insecure=true"
+#       - "--providers.docker=true"
+#       - "--providers.docker.exposedbydefault=false"  # Prevents Traefik from automatically exposing all containers
+#     ports:
+#       - "80:80"
+#       - "8080:8080"
+#       - "8888:8888"
+#     volumes:
+#       - "/var/run/docker.sock:/var/run/docker.sock"
+#     networks:
+#       - traefik-network
+
+#   cdj:
+#     image: code_docker_jupyter_image
+#     labels:
+#       - "traefik.enable=true"
+#       - "traefik.http.routers.cdj.rule=Host(`{{request.Host}}`)"
+#       - "traefik.http.routers.cdj.entrypoints=http"
+#       - "traefik.http.services.cdj.loadbalancer.server.port=8888"
+#       - "traefik.http.services.cdj.loadbalancer.server.scheme=http"
+#     networks:
+#       - traefik-network
+
+# networks:
+#   traefik-network:
+#     external: true
+
+
+
+version: "3.3"
+
+services:
+
+  traefik:
+    image: "traefik:v2.10"
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--ping"
+    ports:
+      - "80:80"
+      - "8080:8080"
+      # - "8888:8888"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    # healthcheck:
+    #   test: ['CMD', 'traefik', 'healthcheck', '--ping']
+    # networks:
+    #   - traefik-network
+
+  # cdj:
+  #   image: "code_docker_jupyter_image"
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.cdj.rule=Host(`cdj.localhost`)"
+  #     - "traefik.http.routers.cdj.entrypoints=web"
+  #   # networks:
+  #   #   - traefik-network
+
+# networks:
+#   traefik-network:
+#     external: true
