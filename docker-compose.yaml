@@ -52,7 +52,6 @@ version: "3.3"
 services:
   traefik:
     image: "traefik:v2.10"
-    network_mode: "host"
     container_name: "traefik"
     command:
       #- "--log.level=DEBUG"
@@ -64,13 +63,13 @@ services:
     ports:
       - "80:80"
       - "8080:8080"
-      # - "8888:8888"
+      - "8888:8888"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     # healthcheck:
     #   test: ['CMD', 'traefik', 'healthcheck', '--ping']
-    # networks:
-    #   - traefik-network
+    networks:
+      - traefik-network
 
   # cdj:
   #   image: "code_docker_jupyter_image"
@@ -81,6 +80,6 @@ services:
   #   # networks:
   #   #   - traefik-network
 
-# networks:
-#   traefik-network:
-#     external: true
+networks:
+  traefik-network:
+    external: true
