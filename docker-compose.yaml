@@ -67,6 +67,11 @@ services:
       # - "8888:8888"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      - "traefik.enable=true"  # Enable Traefik for this service
+      - "traefik.http.routers.myapp.rule=Host(`bignumber.online`)"  # Replace example.com with your domain
+      - "traefik.http.services.myapp.loadbalancer.server.port=80"  # Replace port 80 with the port your service is running on
+
     # healthcheck:
     #   test: ['CMD', 'traefik', 'healthcheck', '--ping']
     # networks:
